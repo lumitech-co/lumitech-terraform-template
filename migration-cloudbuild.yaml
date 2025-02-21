@@ -1,0 +1,38 @@
+steps:
+    - name: "gcr.io/cloud-builders/docker"
+      id: "cloudsql-proxy"
+      entrypoint: "bash"
+      args:
+          - "-c"
+          - docker run -d --name gce-cloudsql-proxy --user root --network cloudbuild --volume /workspace/cloudsql:/cloudsql gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.14-alpine --unix-socket /cloudsql --run-connection-test $_CLOUD_SQL_INSTANCE
+
+    - name: "node:20"
+      id: "setup-node"
+      entrypoint: "npm"
+      args: ["ci"]
+
+    - name: "gcr.io/cloud-builders/docker"
+      id: "print-cloudsql-logs"
+      entrypoint: "bash"
+      args:
+          - "-c"
+          - "docker logs gce-cloudsql-proxy || echo 'No logs found for gce-cloudsql-proxy'"
+
+    - name: "node:20"
+      id: "run-migrations"
+      entrypoint: "bash"
+      args:
+          - "-c"
+          - |
+              ln -s /workspace/cloudsql /cloudsql
+              npm run prisma:deploy
+      secretEnv: ["DATABASE_URL"]
+
+options:
+    substitutionOption: ALLOW_LOOSE
+    logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+    secretManager:
+        - versionName: $_DATABASE_URL_SECRET_ID/versions/latest
+          env: "DATABASE_URL"

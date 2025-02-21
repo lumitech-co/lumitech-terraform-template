@@ -1,0 +1,32 @@
+{
+  "name": "lumitech-terraform-template",
+  "version": "0.0.1",
+  "description": "Lumitech Terraform Template",
+  "main": "src/index.ts",
+  "scripts": {
+    "prebuild": "npm run prisma:generate",
+    "start": "node src/index.js",
+    "prisma:push": "prisma db push --schema src/database/prisma/schema.prisma",
+    "prisma:generate": "prisma generate --schema src/database/prisma/schema.prisma",
+    "prisma:seed": "prisma db seed --schema src/database/prisma/schema.prisma",
+    "prisma:migrate:apply": "prisma migrate dev --schema src/database/prisma/schema.prisma",
+    "prisma:migrate:create": "prisma migrate dev --schema src/database/prisma/schema.prisma --create-only",
+    "prisma:deploy": "prisma migrate deploy --schema src/database/prisma/schema.prisma",
+    "prisma:format": "prisma format --schema src/database/prisma/schema.prisma"
+  },
+  "keywords": [
+    "backend",
+    "api"
+  ],
+  "author": "John Doe",
+  "license": "ISC",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.0.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.0.1"
+  }
+}
