@@ -41,7 +41,7 @@ Before you begin, ensure you have the following prerequisites:
     1. `terraform init` - Initialize the dependencies of your project
     2. `terraform apply` - Create the infrastructure on GCP. You will be prompted to confirm the changes. This step takes approximately 20 minutes.
     3. `terraform init -migrate-state` - Migrate the state to GCP after the infrastructure creation. All the state will be stored on Google Cloud Storage instead of local files.
-7. **Save Changes**: Push the changes to your Github repository with `git push`. 
+7. **Save Changes**: Push the changes to your Github repository with `git push`. This step will trigger first deployment and migration actions on Cloud Build.
 
 ### Template Structure
 
