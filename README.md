@@ -90,3 +90,7 @@ Before you begin, ensure you have the following prerequisites:
             ├── main.tf
             └── variables.tf
 ```
+
+## ✨ Inspired by
+- [General style and structure guidelines](https://cloud.google.com/docs/terraform/best-practices/general-style-structure) - Google Cloud best practices for Terraform configurations.
+- [Root modules](https://cloud.google.com/docs/terraform/best-practices/root-modules) - Google Cloud best practices for Root modules and Terraform structure.
