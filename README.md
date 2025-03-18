@@ -42,11 +42,11 @@ Before you begin, ensure you have the following prerequisites:
     - `migration-cloudbuild.yaml` and `cloudbuild.yaml`.
     - `tf` directory files with `dev` and `modules` folders.
     - `.gitignore` with necessary files to be ignored from Terraform.
-5. **Input Variables**: Create a `terraform.tfvars` file inside `tf/dev` directory and copy the contents of `example.tfvars`. Update the mock data with your project variables.
-    - In this file, you provide the variables of the infrastructure to be created—service name, database name, Github repository, etc.
+5. **Input Variables**: Update the `terraform.tfvars` file inside the `tf/dev` directory. Update the mock data with your project variables.
+    - In this file, you provide the variables of the infrastructure to be created — service name, database name, Github repository, etc.
     - If you are using VSCode, you can install the [Terraform extension](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform). 
 6. **Infrastructure Creation**: Go to `tf/dev` directory in your terminal and apply the following commands:
-    1. `terraform init` - Initialize the dependencies of your project
+    1. `terraform init` - Initialize the dependencies of your project.
     2. `terraform apply` - Create the infrastructure on GCP. You will be prompted to confirm the changes. This step takes approximately 20 minutes.
     3. `terraform init -migrate-state` - Migrate the state to GCP after the infrastructure creation. All the state will be stored on Google Cloud Storage instead of local files.
 7. **Save Changes**: Push the changes to your Github repository with `git push`. This step will trigger first deployment and migration actions on Cloud Build.
