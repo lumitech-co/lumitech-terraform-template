@@ -50,6 +50,49 @@ Before you begin, ensure you have the following prerequisites:
     2. `terraform apply` - Create the infrastructure on GCP. You will be prompted to confirm the changes. This step takes approximately 20 minutes.
     3. `terraform init -migrate-state` - Migrate the state to GCP after the infrastructure creation. All the state will be stored on Google Cloud Storage instead of local files.
 7. **Save Changes**: Push the changes to your Github repository with `git push`. This step will trigger first deployment and migration actions on Cloud Build.
+8. **Unset Temporary Image**: Set cloud run dummy image variable to false after a successful first deployment. (No `terraform apply` is necessary since the new image is already set.)
+
+## Guides
+### Adding Environment Variables
+To provide new environment variable to the Cloud Run container, proceed with the following steps:
+1. Create a new secret variable in the Secret Manager. A guide with the steps you can find in the [Secret Manager documentation](https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#create-a-secret).
+    - Add an environment prefix if the variable will be used only for the current environment. e.g. `dev-secret-name`
+2. Copy the secret ID from the secret details page. Secret id example: `projects/123456789101/secrets/dev-secret-name`.
+3. Create a Terraform variable with the secret ID as its value.
+```terraform
+# variables.tf
+variable "example_secret_for_cloud_run" {
+  type = string
+}
+# ... other variables declaration
+```
+```terraform
+# terraform.tfvars
+example_secret_for_cloud_run = "projects/123456789102/secrets/dev-some-secret"
+# ... other variables
+```
+4. Pass the secret id variable to the Cloud Run module.
+```terraform
+# main.tf
+module "cloud_run" {
+...
+  secret_vars = {
+    SECRET_NAME = var.example_secret_for_cloud_run
+  }
+...
+}
+```
+5. Update the infrastructure on GCP - `terraform apply` and confirm the changes.
+    - This step must update the passed vairables to the Cloud Run instance and create an IAM role for the provided secret ID.
+
+
+### Creating Different Environments
+Each environment represents a root module with the same set of modules.
+To create another environment (production, staging, etc.), complete the following steps:
+1. Copy the `tf/dev` directory with the desired environment naming - e.g. `tf/prod` or `tf/staging`.
+2. Update the environment variables in `terraform.tfvars` to match the environment.
+3. Proceed from the **6-th step** in the **Deployment Steps** section.
+
 
 ## 📂 Template Structure
 
@@ -91,6 +134,6 @@ Before you begin, ensure you have the following prerequisites:
             └── variables.tf
 ```
 
-## ✨ Inspired by
+## ✨ Related Documentation
 - [General style and structure guidelines](https://cloud.google.com/docs/terraform/best-practices/general-style-structure) - Google Cloud best practices for Terraform configurations.
 - [Root modules](https://cloud.google.com/docs/terraform/best-practices/root-modules) - Google Cloud best practices for Root modules and Terraform structure.
