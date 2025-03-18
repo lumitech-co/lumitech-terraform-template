@@ -1,6 +1,14 @@
-This template offers a solution for deploying a Node.js server and a PostgreSQL database on Google Cloud Platform (GCP) using Terraform, an infrastructure as code tool. By leveraging Terraform's language (HCL), the infrastructure can be deployed across different environments like development, production, staging ensuring that the correct configuration is preserved.
+![image](https://github.com/user-attachments/assets/e2b5fd98-bb13-481a-8b8a-85f9d64183e0)
+![license](https://img.shields.io/github/license/lumitech-co/lumitech-terraform-template?style=flat)
+![maintenance](https://img.shields.io/badge/maintenance-active-blue?style=flat)
 
-## Infrastructure Overview
+# Lumitech Terraform Template 
+Welcome to the Lumitech Terraform Template. This template offers a solution for deploying a Node.js server and a PostgreSQL database on Google Cloud Platform (GCP) using Terraform, an infrastructure as code tool. By leveraging Terraform's language (HCL), the infrastructure can be deployed across different environments like development, production, staging ensuring that the correct configuration is preserved.
+
+### About Lumitech
+Lumitech is a custom software development company providing professional services worldwide. We partner with technology businesses globally helping them to build successful engineering teams and create innovative software products. We’re a global team of software engineers, AI and ML specialists, product managers, and technology experts who have achieved a 600% growth rate since 2022. When a rocket launches toward the moon, it doesn’t stop halfway. Neither do we.
+
+## ⚙ Infrastructure Overview
 
 The infrastructure includes the following components:
 
@@ -10,7 +18,7 @@ The infrastructure includes the following components:
 4. **IAM Roles**: Identity and Access Management roles for handling migrations, deployment, and secrets access.
 5. **CI/CD**: Pirsma database migration and deployment configurations triggered on branch updates.
 
-## Prerequisites
+## 📝 Prerequisites
 
 Before you begin, ensure you have the following prerequisites:
 
@@ -19,7 +27,7 @@ Before you begin, ensure you have the following prerequisites:
 - **Basic Knowledge of Terraform**: Familiarize yourself with Terraform by following [this tutorial](https://developer.hashicorp.com/terraform/tutorials/docker-get-started).
 - **GCP Project**: Create a Google Cloud Platform project with billing enabled. Follow the [creation guide](https://developers.google.com/workspace/guides/create-project#project) and [billing setup guide](https://developers.google.com/workspace/guides/create-project#billing).
 
-## Deployment Steps
+## 🚀 Deployment Steps
 
 1. **IAM Roles**: Ensure your IAM Principal has the following roles:
     - Cloud Run Admin
@@ -43,7 +51,7 @@ Before you begin, ensure you have the following prerequisites:
     3. `terraform init -migrate-state` - Migrate the state to GCP after the infrastructure creation. All the state will be stored on Google Cloud Storage instead of local files.
 7. **Save Changes**: Push the changes to your Github repository with `git push`. This step will trigger first deployment and migration actions on Cloud Build.
 
-### Template Structure
+## 📂 Template Structure
 
 ```
 .
