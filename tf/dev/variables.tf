@@ -1,3 +1,7 @@
+variable "example_secret_for_cloud_run" {
+  type = string
+}
+
 variable "project" {
   type        = string
   description = "The GCP project ID to deploy resources"
