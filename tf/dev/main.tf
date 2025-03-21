@@ -95,7 +95,7 @@ module "cloud_run" {
 
   instance_limit_cpus   = var.cloud_run_instance_limit_cpus
   instance_limit_memory = var.cloud_run_instance_limit_memory
-  min_instance_count    = var.cloud_run_min_instance_count // Development - 0, production - 1
+  min_instance_count    = var.cloud_run_min_instance_count
 
   subnetwork_id = module.network.subnetwork_id
   network_id    = module.network.network_id
@@ -109,6 +109,7 @@ module "cloud_run" {
   secret_vars = {
     DATABASE_URL       = module.cloud_sql.database_url_secret_id
     APPLICATION_SECRET = module.secret.application_secret
+    // EXAMPLE_SECRET_FOR_CLOUD_RUN = var.example_secret_for_cloud_run
   }
 
   depends_on = [
