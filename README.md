@@ -107,11 +107,11 @@ This Terraform template is split into a **root module** (in `tf/dev`) and **subm
 
 Each directory within `tf/modules` defines a reusable component of the infrastructure:
 
-- `cloud-run/` – Provisions and configures **Cloud Run** services.  
-- `cloud-sql/` – Manages a **Cloud SQL** PostgreSQL instance.  
-- `network/` – Sets up **VPC** network.  
+- `cloud-run/` – Provisions and configures Cloud Run services.  
+- `cloud-sql/` – Manages a Cloud SQL PostgreSQL instance.  
+- `network/` – Sets up a VPC network.  
 - `project-api/` – Enables project-level APIs.
-- `secret/` – Generate secrets in **Secret Manager**.
+- `secret/` – Generate secrets in Secret Manager.
 
 ```
 .
