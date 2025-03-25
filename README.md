@@ -1,12 +1,16 @@
-![image](https://github.com/user-attachments/assets/e2b5fd98-bb13-481a-8b8a-85f9d64183e0)
-![license](https://img.shields.io/github/license/lumitech-co/lumitech-terraform-template?style=flat)
-![maintenance](https://img.shields.io/badge/maintenance-active-blue?style=flat)
+<div align="center">
+ <img height="160" src="https://github.com/user-attachments/assets/2ab91ccf-ce8e-4f2e-94a8-347e53746e5b" />
+<div>
+ <img src="https://img.shields.io/github/license/lumitech-co/lumitech-terraform-template?style=flat" />
+ <img src="https://img.shields.io/badge/maintenance-active-blue?style=flat" />
+</div>
+</div>
 
-# Lumitech Terraform Template 
+# [Lumitech](https://lumitech.co/) Terraform Template 
 Welcome to the Lumitech Terraform Template. This template offers a solution for deploying a Node.js server and a PostgreSQL database on Google Cloud Platform (GCP) using Terraform, an infrastructure as code tool. By leveraging Terraform's language (HCL), the infrastructure can be deployed across different environments like development, production, staging ensuring that the correct configuration is preserved.
 
 ### About Lumitech
-Lumitech is a custom software development company providing professional services worldwide. We partner with technology businesses globally helping them to build successful engineering teams and create innovative software products. We’re a global team of software engineers, AI and ML specialists, product managers, and technology experts who have achieved a 600% growth rate since 2022. When a rocket launches toward the moon, it doesn’t stop halfway. Neither do we.
+[Lumitech](https://lumitech.co/) is a custom software development company providing professional services worldwide. We partner with technology businesses globally helping them to build successful engineering teams and create innovative software products. We’re a global team of software engineers, AI and ML specialists, product managers, and technology experts who have achieved a 600% growth rate since 2022. When a rocket launches toward the moon, it doesn’t stop halfway. Neither do we.
 
 ## ⚙ Infrastructure Overview
 
