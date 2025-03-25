@@ -1,9 +1,5 @@
 <div align="center">
  <img height="160" src="https://github.com/user-attachments/assets/2ab91ccf-ce8e-4f2e-94a8-347e53746e5b" />
-<div>
- <img src="https://img.shields.io/github/license/lumitech-co/lumitech-terraform-template?style=flat" />
- <img src="https://img.shields.io/badge/maintenance-active-blue?style=flat" />
-</div>
 </div>
 
 # [Lumitech](https://lumitech.co/) Terraform Template 
