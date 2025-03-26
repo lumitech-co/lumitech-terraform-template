@@ -1,5 +1,5 @@
 <div align="center">
- <img height="160" src="https://github.com/user-attachments/assets/2ab91ccf-ce8e-4f2e-94a8-347e53746e5b" />
+ <img width="374" src="https://github.com/user-attachments/assets/2ab91ccf-ce8e-4f2e-94a8-347e53746e5b" />
 </div>
 
 # [Lumitech](https://lumitech.co/) Terraform Template 
