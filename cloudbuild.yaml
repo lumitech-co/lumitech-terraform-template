@@ -1,39 +1,39 @@
 steps:
-    - name: gcr.io/cloud-builders/docker
-      args:
-          - build
-          - "--no-cache"
-          - "-t"
-          - >-
-              $_AR_DOCKER_IMAGE_URI:latest
-          - .
-          - "-f"
-          - Dockerfile
-      id: Build
-    - name: gcr.io/cloud-builders/docker
-      args:
-          - push
-          - >-
-              $_AR_DOCKER_IMAGE_URI:latest
-      id: Push
-    - name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
-      args:
-          - run
-          - services
-          - update
-          - $_SERVICE_NAME
-          - "--platform=managed"
-          - >-
-              --image=$_AR_DOCKER_IMAGE_URI:latest
-          - "--region=$_DEPLOY_REGION"
-          - "--quiet"
-      id: Deploy
-      entrypoint: gcloud
-images:
-    - >-
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - "--no-cache"
+      - "-t"
+      - >-
         $_AR_DOCKER_IMAGE_URI:latest
+      - .
+      - "-f"
+      - Dockerfile
+    id: Build
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - >-
+        $_AR_DOCKER_IMAGE_URI:latest
+    id: Push
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - "--platform=managed"
+      - >-
+        --image=$_AR_DOCKER_IMAGE_URI:latest
+      - "--region=$_DEPLOY_REGION"
+      - "--quiet"
+    id: Deploy
+    entrypoint: gcloud
+images:
+  - >-
+    $_AR_DOCKER_IMAGE_URI:latest
 options:
-    substitutionOption: ALLOW_LOOSE
-    logging: CLOUD_LOGGING_ONLY
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
 tags:
-    - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run

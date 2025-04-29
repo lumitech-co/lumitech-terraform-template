@@ -1,6 +1,6 @@
-variable "example_secret_for_cloud_run" {
-  type = string
-}
+# variable "example_secret_for_cloud_run" {
+#   type = string
+# }
 
 variable "project" {
   type        = string
