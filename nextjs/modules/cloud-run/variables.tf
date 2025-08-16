@@ -35,21 +35,6 @@ variable "gh_repo_name" {
   type        = string
 }
 
-# variable "network_id" {
-#   description = "Computer Network Id"
-#   type        = string
-# }
-
-# variable "subnetwork_id" {
-#   description = "VPC Subnetwork Id"
-#   type        = string
-# }
-
-# variable "db_connection_name" {
-#   description = "Postgres DB Connection Name"
-#   type        = string
-# }
-
 variable "set_dummy_image" {
   description = "Set dummy image for Cloud Run (use when Artifact Registry is not yet created and has no image)"
   type        = bool
