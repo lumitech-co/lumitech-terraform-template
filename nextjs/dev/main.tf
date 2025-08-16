@@ -43,9 +43,9 @@ resource "google_storage_bucket" "tfstate" {
   }
 }
 
-resource "local_file" "backend" {
+resource "local_file" "nextjs" {
   file_permission = "0644"
-  filename        = "${path.module}/backend.tf"
+  filename        = "${path.module}/nextjs.tf"
 
   content = <<-EOT
   terraform {
