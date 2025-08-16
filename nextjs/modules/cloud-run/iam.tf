@@ -27,14 +27,6 @@ resource "google_project_iam_member" "cloub_run_logging" {
   member  = "serviceAccount:${google_service_account.cloud_run_sa.email}"
 }
 
-resource "google_secret_manager_secret_iam_member" "dynamic_access" {
-  for_each = var.secret_vars
-
-  secret_id = each.value
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${google_service_account.cloud_run_sa.email}"
-}
-
 // Cloud Build Service Account
 
 resource "google_service_account" "cloud_build" {
