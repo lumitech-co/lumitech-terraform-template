@@ -1,0 +1,45 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - "--no-cache"
+      - "-t"
+      - $_AR_DOCKER_IMAGE_URI:latest
+      - .
+      - "-f"
+      - Dockerfile
+      - "--build-arg"
+      # Add all your NEXT_PUBLIC_* environment variables here.
+      - NEXT_PUBLIC_API_URL=${_NEXT_PUBLIC_API_URL}
+    id: Build
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - $_AR_DOCKER_IMAGE_URI:latest
+    id: Push
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    entrypoint: gcloud
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - "--platform=managed"
+      - --image=$_AR_DOCKER_IMAGE_URI:latest
+      - --region=$_DEPLOY_REGION
+      - --quiet
+      # Add all your NEXT_PUBLIC_* environment variables here.
+      - --update-env-vars=NEXT_PUBLIC_API_URL=${_NEXT_PUBLIC_API_URL}
+    id: Deploy
+
+images:
+  - $_AR_DOCKER_IMAGE_URI:latest
+
+options:
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
+
+tags:
+  - gcp-cloud-build-deploy-cloud-run
