@@ -5,3 +5,7 @@ output "cloud_sql_instance_name" {
 output "database_url_secret_id" {
   value = google_secret_manager_secret.database_url.id
 }
+
+output "migration_trigger_id" {
+  value = google_cloudbuild_trigger.run_migration.trigger_id
+}

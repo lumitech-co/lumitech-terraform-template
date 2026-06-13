@@ -15,8 +15,12 @@ The infrastructure includes the following components:
 1. **VPC Network**: A Virtual Private Cloud network to securely connect your resources.
 2. **Cloud Run**: A fully managed environment for deploying and scaling containerized applications.
 3. **Cloud SQL**: A fully managed relational database service for PostgreSQL.
-4. **IAM Roles**: Identity and Access Management roles for handling migrations, deployment, and secrets access.
-5. **CI/CD**: Prisma database migration and deployment configurations triggered on branch updates.
+4. **Redis (Memorystore)**: A managed in-memory cache attached to the VPC network.
+5. **Cloud Storage Buckets**: Private and public buckets for file storage, with CORS configured for browser uploads.
+6. **Cloud Scheduler**: Cron jobs that call the API on a schedule (signals, syncs, snapshots, etc.).
+7. **Monitoring & Alerting**: Cloud Monitoring alert policies (Cloud Run 5xx, app error logs, deploy/migration build failures) delivered to email and/or Slack. See [Monitoring & Alerting](#-monitoring--alerting).
+8. **IAM Roles**: Identity and Access Management roles for handling migrations, deployment, and secrets access.
+9. **CI/CD**: Prisma database migration and deployment configurations triggered on branch updates.
 
 ## 📝 Prerequisites
 
@@ -92,6 +96,89 @@ To create another environment (production, staging, etc.), complete the followin
 2. Update the environment variables in `terraform.tfvars` to match the environment.
 3. Proceed from **step 6** in the **Deployment Steps** section.
 
+
+## 📊 Monitoring & Alerting
+
+The `monitoring/` module provisions [Cloud Monitoring](https://cloud.google.com/monitoring/docs) notification channels and alert policies. Alerts fire to **email**, **Slack**, or both — whatever you configure. If neither an email nor a Slack channel is set, the build/migration/error-log alerts are simply not created.
+
+### What is monitored
+
+| Alert policy | Trigger | Type |
+| --- | --- | --- |
+| **Cloud Run 5xx errors** | The service returns any `5xx` response (request count > 0, 60s window). | Metric threshold |
+| **App error logs** | The app emits an `ERROR`-level log. Matches Cloud Logging `severity>=ERROR` **or** Pino's `jsonPayload.level>=50` (50 = error, 60 = fatal), because Cloud Run maps stdout to `INFO`. | Log match |
+| **Deploy failed** | The service's Cloud Build **deploy** trigger produces an `ERROR` log. | Log match |
+| **Migration failed** | The service's Cloud Build **migration** trigger produces an `ERROR` log. | Log match |
+
+Every alert's notification includes a deep link to the exact Logs Explorer query or the specific failed build, so you can jump straight to the relevant logs from Slack/email.
+
+The 5xx alert is always created. The other three are gated by `enable_deploy_alert`, `enable_migration_alert`, and `enable_error_log_alert` (all enabled in `tf/dev/main.tf` and `tf/prod/main.tf`).
+
+### Configuration
+
+The module is wired in each root module (`tf/dev/main.tf`, `tf/prod/main.tf`) via `module "monitoring"`. The values you actually set per environment live in `terraform.tfvars`:
+
+```terraform
+# tf/<env>/terraform.tfvars
+
+# Email recipients. Empty list = email channel disabled (Slack only).
+alert_emails = ["devops@example.com"]
+
+# Slack channel + the Secret Manager secret holding the Slack bot token.
+# Empty slack_channel_name = Slack disabled (email only).
+slack_channel_name         = "#tolmete-alerts-dev"
+slack_auth_token_secret_id = "projects/97812123028/secrets/SLACK_ALERTING_TOKEN"
+```
+
+Key module variables (see `tf/modules/monitoring/variables.tf`):
+
+| Variable | Purpose |
+| --- | --- |
+| `alert_emails` | List of emails to notify. Empty disables the email channel. |
+| `slack_channel_name` | Slack channel to post to (e.g. `#alerts`). Empty disables Slack. |
+| `slack_auth_token_secret_id` | Full Secret Manager secret path holding the Slack bot token. **Required** when `slack_channel_name` is set. |
+| `enable_deploy_alert` / `deploy_trigger_id` | Toggle + Cloud Build deploy trigger ID for the deploy-failure alert. |
+| `enable_migration_alert` / `migration_trigger_id` | Toggle + Cloud Build migration trigger ID for the migration-failure alert. |
+| `enable_error_log_alert` | Toggle the app `ERROR`-log alert. |
+
+### Tutorial: Creating Slack alerts
+
+Follow these steps to wire alerts into a Slack channel.
+
+1. **Create (or pick) a Slack channel** for alerts, e.g. `#tolmete-alerts-dev`.
+
+2. **Create a Slack app with a bot token.**
+    1. Go to <https://api.slack.com/apps> → **Create New App** → **From scratch**. Name it (e.g. `GCP Alerts`) and select your workspace.
+    2. Open **OAuth & Permissions** → **Scopes** → **Bot Token Scopes** and add `chat:write`.
+    3. Click **Install to Workspace** and authorize. Copy the **Bot User OAuth Token** (starts with `xoxb-`).
+    4. In Slack, invite the bot to the channel: `/invite @GCP Alerts` in `#tolmete-alerts-dev`.
+
+    > Alternatively, Cloud Monitoring can connect Slack via its own OAuth flow when you create a Slack channel in the console — but storing your own bot token in Secret Manager (below) keeps the setup fully in Terraform and reproducible.
+
+3. **Store the token in Secret Manager.** Create a secret (e.g. `SLACK_ALERTING_TOKEN`) and add the bot token as a secret version:
+    ```bash
+    gcloud secrets create SLACK_ALERTING_TOKEN --replication-policy=automatic --project=<project-id>
+    printf '%s' 'xoxb-your-bot-token' | gcloud secrets versions add SLACK_ALERTING_TOKEN --data-file=- --project=<project-id>
+    ```
+    Copy the full secret path from the secret's detail page, e.g. `projects/97812123028/secrets/SLACK_ALERTING_TOKEN`.
+
+4. **Point the environment at the channel and secret** in `tf/<env>/terraform.tfvars`:
+    ```terraform
+    slack_channel_name         = "#tolmete-alerts-dev"
+    slack_auth_token_secret_id = "projects/97812123028/secrets/SLACK_ALERTING_TOKEN"
+    ```
+
+5. **Grant the channel access (one-time).** The first time you save a Slack secret, ensure the secret exists before `terraform apply` — the module reads the token via a `google_secret_manager_secret_version` data source at plan time. Your Terraform principal needs `secretmanager.versions.access` on that secret.
+
+6. **Apply.** From `tf/<env>`:
+    ```bash
+    terraform apply
+    ```
+    This creates the `Slack Alert - #tolmete-alerts-dev` notification channel and attaches it to all alert policies.
+
+7. **Verify.** In the GCP Console go to **Monitoring → Alerting → Edit notification channels**, find the Slack channel, and click **Send test notification**. You should see a message appear in the Slack channel.
+
+To **disable** Slack later, clear `slack_channel_name = ""` and re-apply. The channels use `force_delete = true`, so they can be removed even while still referenced by an alert policy.
 
 ## 📂 Template Structure
 

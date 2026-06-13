@@ -27,7 +27,7 @@ resource "google_project_iam_member" "cloud_run_invoker" {
   member  = "serviceAccount:${google_service_account.cloud_run_sa.email}"
 }
 
-resource "google_project_iam_member" "cloub_run_logging" {
+resource "google_project_iam_member" "cloud_run_logging" {
   project = var.project
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.cloud_run_sa.email}"
@@ -54,25 +54,25 @@ resource "google_project_iam_member" "act_as" {
   member  = "serviceAccount:${google_service_account.cloud_build.email}"
 }
 
-resource "google_project_iam_member" "cloub_build_artifact" {
+resource "google_project_iam_member" "cloud_build_artifact" {
   project = var.project
   role    = "roles/artifactregistry.writer"
   member  = "serviceAccount:${google_service_account.cloud_build.email}"
 }
 
-resource "google_project_iam_member" "cloub_build_run" {
+resource "google_project_iam_member" "cloud_build_run" {
   project = var.project
   role    = "roles/run.admin"
   member  = "serviceAccount:${google_service_account.cloud_build.email}"
 }
 
-resource "google_project_iam_member" "cloub_build_source" {
+resource "google_project_iam_member" "cloud_build_source" {
   project = var.project
   role    = "roles/source.reader"
   member  = "serviceAccount:${google_service_account.cloud_build.email}"
 }
 
-resource "google_project_iam_member" "cloub_build_logging" {
+resource "google_project_iam_member" "cloud_build_logging" {
   project = var.project
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.cloud_build.email}"

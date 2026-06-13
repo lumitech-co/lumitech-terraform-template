@@ -7,6 +7,11 @@ variable "project" {
   description = "The GCP project ID to deploy resources"
 }
 
+variable "project_number" {
+  type        = number
+  description = "The GCP project number to deploy resources"
+}
+
 variable "region" {
   type        = string
   description = "Region where to deploy resources"
@@ -25,6 +30,33 @@ variable "environment" {
 variable "service_name" {
   description = "Deployed resources naming e.g. my-project-name"
   type        = string
+}
+
+variable "alert_emails" {
+  description = "Email addresses to notify on Cloud Run 5xx alerts"
+  type        = list(string)
+}
+
+variable "slack_channel_name" {
+  description = "Slack channel to post 5xx alerts to (e.g. #alerts). Empty disables Slack."
+  type        = string
+  default     = ""
+}
+
+variable "slack_auth_token_secret_id" {
+  description = "Secret Manager secret id holding the Slack auth token for the alert channel"
+  type        = string
+  default     = ""
+}
+
+variable "public_bucket_name" {
+  description = "Deployed resources naming e.g. my-project-name"
+  type        = string
+}
+
+variable "public_bucket_cors_allowed_origins" {
+  description = "List of allowed origins for browser uploads (CORS)"
+  type        = list(string)
 }
 
 variable "gh_branch_name" {
@@ -86,3 +118,31 @@ variable "cloud_sql_db_deletion_protection" {
   type        = bool
 }
 
+variable "cloud_sql_allowed_ips" {
+  description = "List of IP addresses or CIDR blocks allowed to access Cloud SQL"
+  type        = list(string)
+  default     = []
+}
+
+variable "cloud_sql_database_flags" {
+  description = "Database flags to set on the Cloud SQL instance"
+  type        = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
+
+variable "api_environment_variables" {
+  description = "Environment variables for the api container"
+  type = object({
+    cors_origin = string
+  })
+}
+
+variable "api_secret_keys" {
+  description = "Secret keys for the API container"
+  type = object({
+  })
+}
