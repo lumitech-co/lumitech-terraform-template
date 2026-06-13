@@ -50,3 +50,17 @@ variable "gh_repo_name" {
   type        = string
 }
 
+variable "allowed_ips" {
+  description = "List of IP addresses or CIDR blocks allowed to access Cloud SQL"
+  type        = list(string)
+}
+
+variable "database_flags" {
+  description = "Database flags to set on the Cloud SQL instance"
+  type        = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
